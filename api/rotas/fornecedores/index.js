@@ -9,7 +9,7 @@ roteador.get('/', async (req, res) => {
     )
 })
 
-roteador.post('/', async (req,res) => {
+roteador.post('/', async (req,res,next) => {
     try {
         const dadosRecebidos = req.body
         const fornecedor = new Fornecedor(dadosRecebidos)
@@ -19,15 +19,11 @@ roteador.post('/', async (req,res) => {
             JSON.stringify(fornecedor)
         )
     } catch(e) {
-        res.status(400).send(
-            JSON.stringify({
-                mensagem: e.message
-            })
-        )
+        next(e)
     }
 })
 
-roteador.get('/:idFornecedor', async (req,res) => {
+roteador.get('/:idFornecedor', async (req,res,next) => {
     try {
         const id = req.params.idFornecedor
         const fornecedor = new Fornecedor({ id: id })
@@ -36,15 +32,11 @@ roteador.get('/:idFornecedor', async (req,res) => {
             JSON.stringify(fornecedor)
         )
     } catch(e) {
-        res.status(404).send(
-            JSON.stringify({
-                mensagem: e.message
-            })
-        )
+        next(e)
     }
 })
 
-roteador.put('/:idFornecedor', async (req,res) => {
+roteador.put('/:idFornecedor', async (req,res,next) => {
     try {
         const id = req.params.idFornecedor
         const dadosRecebidos = req.body
@@ -53,15 +45,11 @@ roteador.put('/:idFornecedor', async (req,res) => {
         await fornecedor.atualizar()
         res.status(204).end()
     } catch(e) {
-        res.status(400).send(
-            JSON.stringify({
-                mensagem: e.message
-            })
-        )
+        next(e)
     }
 })
 
-roteador.delete('/:idFornecedor', async (req,res) => {
+roteador.delete('/:idFornecedor', async (req,res,next) => {
     try {
         const id = req.params.idFornecedor
         const fornecedor = new Fornecedor({ id: id })
@@ -70,11 +58,7 @@ roteador.delete('/:idFornecedor', async (req,res) => {
         await fornecedor.remover()
         res.status(204).end()
     } catch(e) {
-        res.status(404).send(
-            JSON.stringify({
-                mensagem: e.message
-            })
-        )
+        next(e)
     }
 
 })
